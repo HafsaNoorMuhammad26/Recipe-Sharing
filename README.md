@@ -87,6 +87,6 @@ Recipe-Sharing/
 
 * 🌐 [GitHub](https://github.com/HafsaNoorMuhammad26)
 * 💼 Software Engineering Student | Junior Data Analyst
-* 📎 \[LinkedIn (https://www.linkedin.com/in/hafsa-noor-muhammad-67b96331a/)]
+* 📎 [LinkedIn](https://www.linkedin.com/in/hafsa-noor-muhammad-67b96331a/)
 
 
