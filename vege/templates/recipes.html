@@ -1,75 +1,182 @@
 {% extends "base.html" %}
 {% block start %}
 
-{{request.user}}
+<div class="container py-5">
+  <!-- Current User Display -->
+  <div class="text-end mb-4">
+    <span class="badge bg-gradient-primary p-2" style="background: linear-gradient(45deg, #ff9a3c, #ff6b6b);">
+      <i class="fas fa-user-circle me-2"></i>{{request.user}}
+    </span>
+  </div>
 
-<div class="container mt-5">
-
-  <form class="col-6 mx-auto card p-3 shadow-lg" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h2>Add Receipe</h2>
-    <hr>
-
-    <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Receipe name</label>
-      <input name="recipe_name" type="text" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label for="exampleInputPassword1" class="form-label">Receipe description</label>
-        <textarea class="form-control" name="recipe_desc" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Receipe Image</label>
-        <input name="recipe_img" type="file" class="form-control">
-    </div>
-    <button type="submit" class="btn btn-success">Add Receipe</button>
-  </form>
-
-  <hr>
-  <div class="mt-5">
-    <div class="mx-auto col-6">
-
-      <form>
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">Search Food</label>
-        <input name="search" type="text" class="form-control">
-
-        <button type="submit" class="btn btn-primary">Search</button>
+  <!-- Add Recipe Card -->
+  <div class="col-lg-6 col-md-8 mx-auto">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-5">
+      <div class="card-header bg-transparent">
+        <h3 class="text-center mb-0" style="color: #ff6b6b;">
+          <i class="fas fa-plus-circle me-2"></i>Add New Recipe
+        </h3>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-4">
+          <label class="form-label fw-semibold">Recipe Name</label>
+          <input name="recipe_name" type="text" class="form-control" placeholder="Enter recipe name" required>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Description</label>
+          <textarea class="form-control" name="recipe_desc" rows="3" placeholder="Describe your recipe..." required></textarea>
+        </div>
+        
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Recipe Image</label>
+          <input name="recipe_img" type="file" class="form-control" accept="image/*">
+          <small class="text-muted">Upload high-quality image (JPEG, PNG)</small>
+        </div>
+        
+        <button type="submit" class="btn w-100 py-2 fw-bold" 
+                style="background: linear-gradient(45deg, #ff9a3c, #ff6b6b); color: white; border: none; border-radius: 50px;">
+          <i class="fas fa-save me-2"></i>Save Recipe
+        </button>
       </form>
+    </div>
+  </div>
+</div>
+          <!-- Form fields remain the same -->
+        </form>
       </div>
     </div>
   </div>
 
+  <!-- Enhanced Search Section -->
+  <div class="col-lg-6 col-md-8 mx-auto mb-5">
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+      <div class="card-body p-4">
+        <form class="search-form">
+          <div class="input-group input-group-lg">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="fas fa-search" style="color: #ff9a3c;"></i>
+            </span>
+            <input name="search" type="text" class="form-control border-start-0 py-3" 
+                   placeholder="Search recipes by name, ingredients..." aria-label="Search recipes">
+            <button type="submit" class="btn" 
+                    style="background: linear-gradient(45deg, #ff9a3c, #ff6b6b); color: white;">
+              Search
+            </button>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <small class="text-muted">Try: "pizza", "chicken", "vegetarian"</small>
+            <a href="#" class="text-decoration-none" style="color: #ff6b6b;">Advanced search</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-  <table class="table mt-5">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Receipe name</th>
-        <th scope="col">Receipe desc</th>
-        <th scope="col">Image</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for recipe in recipes %}
-      <tr>
-        <th scope="row">{{forloop.counter}}</th>
-        <td>{{recipe.recipe_name}}</td>
-        <td>{{recipe.recipe_desc}}</td>
-        <td>
-          <img src="/media/{{recipe.recipe_img}}" style="height : 100px"></td>
-          <td>
-            <a href="/delete-recipe/{{recipe.id}}" class="btn btn-danger m-2">Delete</a>
-            <a href="/update-recipe/{{recipe.id}}" class="btn btn-success">Update</a>
-          </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
+  <!-- Recipes Table with Visible Actions -->
+  <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead style="background: linear-gradient(45deg, #ff9a3c, #ff6b6b); color: white;">
+            <tr>
+              <th scope="col" class="ps-4">#</th>
+              <th scope="col">Recipe</th>
+              <th scope="col">Description</th>
+              <th scope="col">Image</th>
+              <th scope="col" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for recipe in recipes %}
+            <tr>
+              <th scope="row" class="ps-4">{{forloop.counter}}</th>
+              <td class="fw-semibold">{{recipe.recipe_name}}</td>
+              <td>
+                <div class="text-truncate" style="max-width: 200px;">
+                  {{recipe.recipe_desc}}
+                </div>
+              </td>
+              <td>
+                <div class="ratio ratio-1x1" style="width: 80px;">
+                  <img src="/media/{{recipe.recipe_img}}" class="img-thumbnail object-fit-cover" 
+                       alt="{{recipe.recipe_name}}" style="border-radius: 10px;">
+                </div>
+              </td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <a href="/update-recipe/{{recipe.id}}" 
+                     class="btn btn-sm btn-primary rounded-pill px-3 d-flex align-items-center">
+                    <i class="fas fa-edit me-1"></i>Update
+                  </a>
+                  <a href="/delete-recipe/{{recipe.id}}" 
+                     class="btn btn-sm btn-danger rounded-pill px-3 d-flex align-items-center">
+                    <i class="fas fa-trash-alt me-1"></i>Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-5">
+                <div class="empty-state">
+                  <i class="fas fa-utensils fa-3x mb-3" style="color: #ff9a3c;"></i>
+                  <h5>No recipes found</h5>
+                  <p class="text-muted">Try adjusting your search or add a new recipe</p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
+<style>
+  /* Enhanced Search Bar */
+  .search-form {
+    position: relative;
+  }
+  
+  .search-form .btn {
+    border-radius: 0 12px 12px 0;
+    padding: 0 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .search-form .btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  .search-form input {
+    border-radius: 12px 0 0 12px !important;
+    font-size: 1rem;
+  }
+  
+  /* Table Actions */
+  .table-hover tbody tr:hover {
+    background-color: rgba(255, 154, 60, 0.08);
+  }
+  
+  .btn-primary {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+  }
+  
+  .btn-primary:hover {
+    background-color: #e05555;
+    border-color: #e05555;
+  }
+  
+  /* Empty State */
+  .empty-state {
+    padding: 2rem;
+  }
+</style>
 
-{% endblock start %}
- 
+{% endblock %}
